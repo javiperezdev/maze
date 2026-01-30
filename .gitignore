@@ -1,0 +1,23 @@
+# --- Java compiled files ---
+*.class
+*.log
+*.ctxt
+
+# --- Eclipse output folders ---
+bin/
+tmp/
+
+# --- Eclipse local configurations (Optional but recommended) ---
+.metadata/
+.settings/
+.recommenders/
+.loadpath
+
+# --- Project specific files (Optional) ---
+# Use these if you don't want to share your project definition
+# .project
+# .classpath
+
+# --- OS generated files ---
+.DS_Store
+Thumbs.db
