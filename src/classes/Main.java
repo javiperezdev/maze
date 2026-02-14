@@ -1,17 +1,12 @@
-package main;
+package classes;
 /**
  * Main.java
  * Main program to solve mazes.
  * JAVI - 2026.01.30
- * version 0.2.0
+ * version 1.0.0
  */
 
 import java.util.Scanner;
-
-import classes.Config;
-import classes.Input;
-import classes.Session;
-import classes.Maze;
 
 public class Main {
 	public static Scanner sc = new Scanner(System.in); 	
@@ -71,6 +66,7 @@ public class Main {
 			case "3": 
 				System.out.println();
 				maze.setStartEnd();
+				Input.toContinue();
 				break;
 			case "4": 
 				System.out.println("COMING SOON!");

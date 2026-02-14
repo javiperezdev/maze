@@ -20,7 +20,7 @@ public class Session {
 	}
 	
 	public void logout() {
-		System.out.println("\nSuccesfully logged out!");
+		System.out.println("\nSuccessfully logged out!");
 		this.user = null;
 		this.logged = false;
 	}
@@ -124,7 +124,7 @@ public class Session {
 		String password = Input.getString("Enter your password: ");
 		
 		if (authentication(username, password)) {
-			System.out.println("\nLogin succesfuly");
+			System.out.println("\nLogin was successful!");
 		}
 	}
 	
