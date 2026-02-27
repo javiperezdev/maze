@@ -50,6 +50,37 @@ public class Main {
 		}
 		return true;
 	}
+	
+	public static void mazeSolverMenu() {
+		String option = Input.getString(Config.MAZE_SOLVER_MENU + "\nChoose an option: ");
+			
+		switch (option) {
+			case "1": 
+				if (maze.findFirstPath()) {
+					maze.showMaze();
+					System.out.println();
+					maze.showPath();
+				}
+				break;
+					
+			case "2": 
+				if (maze.findShortestPath()) {
+					maze.showMaze();
+					System.out.println();
+					maze.showPath();
+				}
+				break;
+					
+			case "0": 
+				break;
+					
+			default: 
+				System.out.println("The option entered is not valid!\n");
+				break;
+		
+		}
+	}
+	
 	public static boolean loggedMenu() {
 		String option = Input.getString(Config.LOGGED_MENU + "\nChoose an option: ");
 		
@@ -69,7 +100,11 @@ public class Main {
 				Input.toContinue();
 				break;
 			case "4": 
-				System.out.println("COMING SOON!");
+			    if (!maze.isLoaded()) {
+			        System.out.println("Error: maze must be loaded!");
+			        break;
+			    }
+				mazeSolverMenu();
 				break;
 			case "5": 
 				session.showUser();

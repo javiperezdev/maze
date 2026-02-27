@@ -48,7 +48,7 @@ public class Input {
 		try {
 			number = Integer.parseInt(keyboard.nextLine().trim());
 			if ((number >= 0 && number < maze[0].length)) return number;
-			System.out.println("Error: the entered row doesn't exist");
+			System.out.println("Error: the entered column doesn't exist");
 			number = -1;
 		} catch (Exception e) {
 			System.out.println(INT_ERROR);

@@ -8,8 +8,8 @@ import java.io.IOException;
 public class Session {
 	private User user;
 	private boolean logged;
-	private final String FILE_PATH = "assets/files/";;
-	private final String USERS_FILE = "users.txt";
+	private static final String FILE_PATH = "assets/files/";
+	private static final String USERS_FILE = "users.txt";
 	
 	public Session() {
 		this.logged = false;
@@ -104,14 +104,8 @@ public class Session {
 	}
 	
 	public boolean checkUserExists(String username, String filePath, String usersFile) {	
-
 		String[] userData = searchByUsername(username, filePath, usersFile); 
-		
-		if (userData == null) { 
-			return false;
-		}
-		
-		return true;
+		return userData != null;
 	}
 	
 
