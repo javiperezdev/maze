@@ -1,90 +1,69 @@
 package classes;
 
-import java.io.File;
-import java.util.Scanner;
-import java.io.FileWriter;
-import java.io.IOException;
-
+/**
+ * Clase encargada de gestionar la sesión activa, registro y 
+ * validación de los usuarios a través de archivos de texto.
+ * * @author Francisco Javier Pérez Pastor
+ * @version 1.1.0
+ */
 public class Session {
+	/** Usuario que actualmente tiene la sesión iniciada */
 	private User user;
+	/** Indica si existe un usuario logueado en el sistema */
 	private boolean logged;
-	private static final String FILE_PATH = "assets/files/";
-	private static final String USERS_FILE = "users.txt";
-	
+	private DAO dao = new DAO();
+
+	/**
+	 * Constructor por defecto que inicializa la sesión como no logueada.
+	 */
 	public Session() {
 		this.logged = false;
 	}
 	
+	/**
+	 * Verifica si hay una sesión activa.
+	 * @return true si hay un usuario logueado, false si no.
+	 */
 	public boolean isLogged() {
 		return this.logged;
 	}
 	
+	/**
+	 * Cierra la sesión activa del usuario actual.
+	 */
 	public void logout() {
 		System.out.println("\nSuccessfully logged out!");
 		this.user = null;
 		this.logged = false;
 	}
 	
+	/**
+	 * Muestra por consola la información del usuario con sesión activa.
+	 */
 	public void showUser()  {
 		System.out.println("\n===="+ (user.getUsername()).toUpperCase() + " INFORMATION====");
 		System.out.println(user.toString());
 		System.out.println("=========================");
 	}
 	
-	public boolean addUser(User u, String password, String filePath, String usersFile) {
-		
-		try {
-			FileWriter writer = new FileWriter(filePath+usersFile, true);
-			String fileFormatOutput = 
-					u.getUsername() + "#" +
-					password + "#" +
-					u.getFullName() + "#" +
-					u.getNif() + "#" +
-					u.getEmail() + "#" +
-					u.getAddress() + "#" +
-					u.getBirthdate() + "#" + 
-					u.getRole();
-			
-			
-			writer.write(System.lineSeparator() + fileFormatOutput);
-			
-			
-			writer.close();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		return true;
-	}
-	
-	private String[] searchByUsername(String username, String filePath, String usersFile) {
-		File f = new File(filePath+usersFile);
-		
-		try (Scanner reader = new Scanner(f)){
-			while (reader.hasNextLine()) {
-				String row = reader.nextLine();
-				String[] columns = row.split("#");
-				if (columns.length != 8) continue;
-				
-				if (columns[0].equalsIgnoreCase(username)) {
-					return columns;
-				}
-			}
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;	
-	}
-	
+
+	/**
+	 * Gestiona el proceso de registro solicitando datos por pantalla.
+	 * @return true si el registro se completó con éxito, false en caso contrario.
+	 */
 	public boolean signUp(){
 		String username = Input.getString("\nEnter your username: ");
-		if (checkUserExists(username, FILE_PATH, USERS_FILE)) {
-			System.out.println("Username already taken!");
+		if (!Utils.validateUsername(username)) {
+			System.out.println("ERROR: username is not valid!");
 			return false;
 		}
 		
 		String password = Input.getString("Enter a password: ");
+		if (!Utils.validatePassword(password)) {
+			System.out.println("ERROR: Your password must be at least 8 characters long and include: an uppercase letter, a lowercase letter, a number, and a special character (no spaces allowed)!");
+			return false;
+		}
+		
 		String confirmPassword = Input.getString("Confirm your password: ");
 		if (!password.equals(confirmPassword)) {
 			System.out.println("Passwords don't match!");
@@ -92,71 +71,59 @@ public class Session {
 		}
 		
 		String fullName = Input.getString("Enter your full name: ");
+		if (!Utils.validateName(fullName)) {
+			System.out.println("ERROR: Name is not valid!");
+			return false;
+		}
+		
 		String nif = Input.getString("Enter your nif: ");
+		if (!Utils.validateNif(nif)) {
+			System.out.println("ERROR: NIF format is not valid!");
+			return false;
+		}
+		
 		String email = Input.getString("Enter your email: ");
+		if (!Utils.validateEmail(email)) {
+			System.out.println("ERROR: email format is not valid!");
+			return false;
+		}
+		
 		String address = Input.getString("Enter your address: ");
-		String birthdate = Input.getString("Enter your birthdate: ");
-		
-		user = new User(username, fullName, nif, email, address, birthdate, "user");
-		addUser(user, password, FILE_PATH, USERS_FILE);
-		
-		return true;	
-	}
-	
-	public boolean checkUserExists(String username, String filePath, String usersFile) {	
-		String[] userData = searchByUsername(username, filePath, usersFile); 
-		return userData != null;
-	}
-	
 
+		
+		String birthdate = Input.getString("Enter your birthdate: ");
+		if (!Utils.validateDate(birthdate)) {
+			System.out.println("ERROR: date format is not valid!");
+			return false;
+		}
+		
+		user = new User(username, password, fullName, nif, email, address, birthdate, "user");
+		
+		if (dao.checkUser(user)) {
+	        System.out.println("ERROR: Username, Email or NIF are already in the system!");
+	        return false;
+	    }
+		
+		System.out.println("Registration successful!");
+		return dao.signup(user);	
+	}
+	
+	
+	/**
+	 * Inicia el proceso de login pidiendo datos por teclado.
+	 */
 	public void login() {
 		String username = Input.getString("\nEnter your username:");
-		if(!checkUserExists(username, FILE_PATH, USERS_FILE)) {
-			System.out.println("\nUsername does not exist!");
-			return;
-		}
 		String password = Input.getString("Enter your password: ");
 		
-		if (authentication(username, password)) {
+		user = dao.login(username, password);
+		if (user != null) {
 			System.out.println("\nLogin was successful!");
-		}
-	}
-	
-	public boolean authentication(String username, String password) {	
-
-			String[] userData = searchByUsername(username, FILE_PATH, USERS_FILE); 
-						
-			if (userData == null) { 
-				System.out.println("\nUsername does not exist!");
-				return false;
-			}
-			
-			
-			if (!password.equalsIgnoreCase(userData[1])) {
-				System.out.println("\nIncorrect password!");
-				return false;
-			}
-			user  = new User(userData[0], userData[2], userData[3], userData[4], userData[5], userData[6], userData[7]);
-			this.logged = true;
-			return true;
-	}
-	
-	public boolean authentication(String username, String password, String filePath, String usersFile) {	
-
-		String[] userData = searchByUsername(username, filePath, usersFile); 
-					
-		if (userData == null) { 
-			System.out.println("\nUsername does not exist!");
-			return false;
+			logged = true;
 		}
 		
-		
-		if (!password.equalsIgnoreCase(userData[1])) {
-			System.out.println("\nIncorrect password!");
-			return false;
+		else {
+			System.out.println("Incorrect username or password!");
 		}
-		user  = new User(userData[0], userData[2], userData[3], userData[4], userData[5], userData[6], userData[7]);
-		this.logged = true;
-		return true;
-}
+	}
 }

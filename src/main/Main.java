@@ -1,18 +1,30 @@
-package classes;
-/**
- * Main.java
- * Main program to solve mazes.
- * JAVI - 2026.01.30
- * version 1.0.0
- */
+package main;
 
 import java.util.Scanner;
 
+import classes.Config;
+import classes.Input;
+import classes.Maze;
+import classes.Session;
+
+/**
+ * Clase principal que ejecuta el sistema de resolución de laberintos.
+ * Controla el ciclo principal del programa y el flujo de los menús de usuario.
+ * * @author Francisco Javier Pérez Pastor
+ * @version 1.0.0 
+ */
 public class Main {
+	/** Lector global de teclado */
 	public static Scanner sc = new Scanner(System.in); 	
+	/** Instancia global de la sesión del usuario */
 	public static Session session = new Session();
+	/** Instancia global del laberinto en ejecución */
 	public static Maze maze = new Maze();
 	
+	/**
+	 * Método principal que arranca el bucle del menú principal del sistema.
+	 * @param args Argumentos de la línea de comandos.
+	 */
 	public static void main(String[] args) {
 		boolean repeat = true;
 		
@@ -27,6 +39,12 @@ public class Main {
 			}
 		}
 	}
+	
+	/**
+	 * Muestra y gestiona las opciones de menú para un usuario sin sesión activa.
+	 * Permite login, registro y salir.
+	 * @return true para mantener el ciclo en ejecución, false para terminar el programa.
+	 */
 	public static boolean unloggedMenu() {
 		String option = Input.getString(Config.UNLOGGED_MENU + "\nChoose an option: ");
 			
@@ -51,6 +69,10 @@ public class Main {
 		return true;
 	}
 	
+	/**
+	 * Muestra y gestiona las opciones de búsqueda de caminos dentro del laberinto.
+	 * Dependiendo de la elección ejecuta distintos algoritmos.
+	 */
 	public static void mazeSolverMenu() {
 		String option = Input.getString(Config.MAZE_SOLVER_MENU + "\nChoose an option: ");
 			
@@ -81,6 +103,11 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * Muestra y gestiona el menú para usuarios logueados, 
+	 * desde donde pueden manipular laberintos y configuraciones.
+	 * @return true para continuar la ejecución de la aplicación, false para cerrarla.
+	 */
 	public static boolean loggedMenu() {
 		String option = Input.getString(Config.LOGGED_MENU + "\nChoose an option: ");
 		
@@ -123,5 +150,4 @@ public class Main {
 		}
 		return true;
 	}
-}	
-
+}
