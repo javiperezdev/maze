@@ -27,6 +27,7 @@ public class Maze {
 	public void loadMaze() {
 		String fileToOpen = fileMenu();
 		if (fileToOpen == null) {
+			LogGenerator.generateLog("Failed to load maze", "file: not defined");
 			return;
 		}
 		this.filename = fileToOpen;
@@ -46,13 +47,11 @@ public class Maze {
 		}
 		
 		this.loaded = true;
+		LogGenerator.generateLog("Maze loaded successfully", "file: " + this.filename);
 		this.map = maze;
 	}
-	
-	/**
-	 * Despliega un menú por consola mostrando los archivos de laberintos disponibles.
-	 * @return Nombre del archivo seleccionado o null si el usuario cancela.
-	 */
+
+
 	private String fileMenu() {
 		File folder = new File(MAZES_PATH);
 		String[] files = folder.list();
@@ -73,10 +72,6 @@ public class Maze {
 		return null;
 	}
 	
-	/**
-	 * Lee el contenido del archivo del laberinto seleccionado línea a línea.
-	 * @return Lista de Strings donde cada elemento es una fila del laberinto.
-	 */
 	private ArrayList<String> extractMaze() {
 		ArrayList<String> mazeContent = new ArrayList<>();
 		File f = new File(MAZES_PATH + "/" + filename);
@@ -91,13 +86,10 @@ public class Maze {
 		return mazeContent;
 	}
 	
-	/**
-	 * Dibuja el estado actual del laberinto por consola, incluyendo 
-	 * inicio, fin y el camino si existe.
-	 */
 	public void showMaze() {
         if (!this.loaded) {
             System.out.println("There are no mazes loaded");
+            LogGenerator.generateLog("Failed to show maze", "file: not defined");
             return;
         }
 
@@ -158,14 +150,13 @@ public class Maze {
             }
             System.out.println(); 
         }
+        LogGenerator.generateLog("Maze shown succesfully", "file: " + this.filename);
     }
 	
-	/**
-	 * Solicita al usuario que defina las coordenadas de inicio (I) y fin (F) del laberinto.
-	 */
 	public void setStartEnd() {
 		if (!this.loaded) {
 			System.out.println("Loaded maze is needed before setting start and end!");
+            LogGenerator.generateLog("Failed to set boxes", "details: No maze was loaded");
 			return;
 		}
 		this.startI = Input.getRows("Enter the starting row number: ", this.map);
@@ -175,6 +166,7 @@ public class Maze {
 		
 		if (this.map[startI][startJ] == '#') {
 			System.out.println("Start box can't be placed in a position containing '#'!");
+	        LogGenerator.generateLog("Failed to set boxes", "details: User tried to set start in a postion containing '#'");
 			return;
 		}
 
@@ -185,19 +177,20 @@ public class Maze {
 		
 		if (this.map[endI][endJ] == '#') {
 			System.out.println("End box can't be placed in a position containing '#'!");
+	        LogGenerator.generateLog("Failed to set boxes", "details: User tried to set end in a postion containing '#'");
 			return;
 		}
 		
+		
 		if (startI == endI && startJ == endJ) {
 			System.out.println("Start box and end box can't be placed in the same box!");
+	        LogGenerator.generateLog("Failed to set boxes", "details: User tried to set start and end in the same position");
 			return;
 		}
+		
+        LogGenerator.generateLog("Successfully setted boxes", "postions: start=(" + startI + ", " + startJ + ") end=(" + endI + ", " + endJ + ")");
 	}
 	
-	/**
-	 * Busca el primer camino posible desde el inicio hasta el final usando recorrido de pila (DFS).
-	 * @return true si encuentra un camino, false de lo contrario.
-	 */
 	public boolean findFirstPath() {		  
 		this.visited = new boolean[this.map.length][this.map[0].length];
 		
@@ -211,6 +204,7 @@ public class Maze {
 			Coordinate currentBox = path.peek();
 			
 			if (currentBox.getI() == endI && currentBox.getJ()== endJ) {
+		        LogGenerator.generateLog("First path found successfully", "steps: " + this.path.toArray().length);
 				return true;
 			}
 			
@@ -231,13 +225,11 @@ public class Maze {
 					visited[foundBox.getI()][foundBox.getJ()] = true;
 			}
 		}
+		
+		LogGenerator.generateLog("Failed to find first path", "details: The maze has no solution for the entered coordinates");
 		return false;
 	}
 	
-	/**
-	 * Busca el camino más corto utilizando un algoritmo de búsqueda en anchura (BFS) y colas.
-	 * @return true si encuentra un camino, false de lo contrario.
-	 */
 	public boolean findShortestPath() {
 	    Queue<Node> shortPath = new LinkedList<>();
 	    
@@ -283,6 +275,7 @@ public class Maze {
 	    }
 
 	    if (endNode == null) {
+			LogGenerator.generateLog("Failed to find shortest path", "details: The maze has no solution for the entered coordinates");
 	        return false;
 	    }
 
@@ -291,13 +284,10 @@ public class Maze {
 	        this.path.add(0, tracker.getCoord()); 
 	        tracker = tracker.getParent(); 
 	    }
-
+        LogGenerator.generateLog("Shortest path found successfully", "steps: " + this.path.toArray().length);
 	    return true;
 	}
 
-	/**
-	 * Muestra por consola los pasos calculados (el camino) en formato de coordenadas e instrucciones.
-	 */
 	public void showPath() {
 		Coordinate[] stepsArray = this.path.toArray(new Coordinate[0]);
 		System.out.println("Steps: " + stepsArray.length);
@@ -311,13 +301,6 @@ public class Maze {
 		this.path.clear();
 	}
 	
-	/**
-	 * Verifica si un movimiento hacia una casilla dada es válido (dentro del mapa, no es pared y no es del camino actual).
-	 * @param i Fila destino.
-	 * @param j Columna destino.
-	 * @param direction Dirección del movimiento.
-	 * @return true si el movimiento es válido, false en caso contrario.
-	 */
 	public boolean isValid(int i, int j, int direction) {
 		if ((i >= 0 && i < this.map.length)&&(j>=0 && j < this.map[0].length)) {
 			if (this.path.contains(new Coordinate(i, j, direction))) return false;

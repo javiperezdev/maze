@@ -9,8 +9,8 @@ public class DAO {
     private final String SERVER = "localhost";
     private final String PORT = "3306";
     private final String DB = "maze";
-    private final String USER = "javi";
-    private final String PASS = "1234";
+    private final String USER = "root";
+    private final String PASS = "Kaviiz12@";
     private final String URL = "jdbc:mysql://" + SERVER + ":" + PORT + "/" + DB;
 
     public boolean checkUser(User user) {
@@ -25,7 +25,7 @@ public class DAO {
                 }
             }
         } catch (Exception e) {
-            System.out.println("ERROR: " + e);
+			LogGenerator.generateLog("Failed to connect with database", "details: " + e);
         }
         return false;
     }
@@ -57,7 +57,7 @@ public class DAO {
                 }
             }
         } catch (Exception e) {
-            System.out.println("ERROR: " + e);
+			LogGenerator.generateLog("Failed to connect with database", "details: " + e);
         }
         return null;
     }
@@ -76,7 +76,7 @@ public class DAO {
                 return stmt.executeUpdate(query) > 0;
             }
         } catch (Exception e) {
-            System.out.println("ERROR: " + e);
+			LogGenerator.generateLog("Failed to connect with database", "details: " + e);
         }
         return false;
     }
