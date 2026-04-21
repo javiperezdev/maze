@@ -53,7 +53,7 @@ public class User {
 		return username;
 	}
 
-	public String getFullName() {
+	public String getName() {
 		return name;
 	}
 
@@ -76,6 +76,41 @@ public class User {
 	public String getRole() {
 		return role;
 	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public void setNif(String nif) {
+		this.nif = nif;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+
+	public void setBirthdate(String birthdate) {
+		this.birthdate = birthdate;
+	}
+
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 
 	@Override
 	public String toString() {

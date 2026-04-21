@@ -70,7 +70,7 @@ public class DAO {
                 Statement stmt = conn.createStatement()) {
                 
                 String query = "INSERT INTO user (username, password, name, nif, email, address, birthdate, role) VALUES ('" + user.getUsername() + "', '" + Utils.encryptMd5(user.getPassword()) + "', '" 
-                             + user.getFullName() + "', '" + user.getNif() + "', '" + user.getEmail() + "', '" 
+                             + user.getName() + "', '" + user.getNif() + "', '" + user.getEmail() + "', '" 
                              + user.getAddress() + "', '" + Utils.formatDateSQL(user.getBirthdate()) + "', '" + user.getRole() + "')";
                 
                 return stmt.executeUpdate(query) > 0;
@@ -79,5 +79,61 @@ public class DAO {
 			LogGenerator.generateLog("Failed to connect with database", "details: " + e);
         }
         return false;
+    }
+    
+    public boolean emailExists(String email) {
+    	try {
+	    	try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+	    		Statement stmt = conn.createStatement()) {
+	    		String query = "select * from user where email" + " = '" + email + "';";
+	    		try (ResultSet rs = stmt.executeQuery(query)) {
+	                   return rs.next();
+	    		}
+	    	}
+	    } catch (Exception e) {
+			LogGenerator.generateLog("Failed to connect with database", "details: " + e);
+	    	}
+    	return false;
+    }
+    
+    public boolean nifExists(String nif) {
+    	try {
+	    	try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+	    		Statement stmt = conn.createStatement()) {
+	    		String query = "select * from user where nif" + " = '" + nif + "';";
+	    		try (ResultSet rs = stmt.executeQuery(query)) {
+	                   return rs.next();
+	    		}
+	    	}
+	    } catch (Exception e) {
+			LogGenerator.generateLog("Failed to connect with database", "details: " + e);
+	    	}
+    	return false;
+    }
+    
+    public boolean update(String column, String data, int id) {
+    	try {
+    		try(Connection conn = DriverManager.getConnection(URL, USER, PASS);
+    			Statement stmt = conn.createStatement()) {
+    			String query = "update user set " + column + "='" + data + "' where id = '" + id + "';";
+    			return stmt.executeUpdate(query) > 0;
+    		}
+    	} catch (Exception e) {
+			LogGenerator.generateLog("Failed to connect with database", "details: " + e);
+    	}
+    	return false;
+    }
+    
+    public boolean delete(int id) {
+    	try {
+    		try(Connection conn = DriverManager.getConnection(URL, USER, PASS);
+    			Statement stmt = conn.createStatement()) {
+    			String query = "delete from user where id = '" + id + "';";
+    			return stmt.executeUpdate(query) > 0;
+    		}
+    	} catch (Exception e) {
+			LogGenerator.generateLog("Failed to connect with database", "details: " + e);
+    	}
+    	return false;
     }
 }

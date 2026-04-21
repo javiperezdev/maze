@@ -30,7 +30,7 @@ public class Session {
 
 	}
 	
-	public boolean signUp(){
+	public boolean signUp(){ // Need to add fail fast for the username
 		String username = Input.getString("\nEnter your username: ");
 		if (!Utils.validateUsername(username)) {
 			System.out.println("ERROR: username is not valid!");
@@ -84,7 +84,7 @@ public class Session {
 			return false;
 		}
 		
-		user = new User(username, password, fullName, nif, email, address, birthdate, "user");
+		this.user = new User(username, password, fullName, nif, email, address, birthdate, "user");
 		
 		if (dao.checkUser(user)) {
 	        System.out.println("ERROR: Username, Email or NIF are already in the system!");
@@ -100,16 +100,19 @@ public class Session {
 		String username = Input.getString("\nEnter your username: ");
 		String password = Input.getString("Enter your password: ");
 		
-		user = dao.login(username, password);
+		this.user = dao.login(username, password);
 		if (user != null) {
 			System.out.println("\nLogin was successful!");
 			LogGenerator.generateLog("Succesful log in", "username: " + username);
 			logged = true;
+			return;
 		}
-		
-		else {
-			System.out.println("Incorrect username or password!");
-			LogGenerator.generateLog("Failed log in", "username: " + username);
-		}
+
+		System.out.println("Incorrect username or password!");
+		LogGenerator.generateLog("Failed log in", "username: " + username);
+	}
+	
+	public User getUser() {
+		return this.user;
 	}
 }

@@ -3,6 +3,7 @@ package main;
 import java.util.Scanner;
 
 import classes.Config;
+import classes.DataUpdater;
 import classes.Input;
 import classes.LogGenerator;
 import classes.Maze;
@@ -12,6 +13,7 @@ public class Main {
 	public static Scanner sc = new Scanner(System.in); 	
 	public static Session session = new Session();
 	public static Maze maze = new Maze();
+	public static DataUpdater dp = new DataUpdater(session);
 
 	public static void main(String[] args) {
 		boolean repeat = true;
@@ -119,6 +121,9 @@ public class Main {
 				session.logout();
 				maze = new Maze();
 				break;	
+			case "7":
+				dp.dataUpdaterMenu();
+				break;
 			case "0": 
 				System.out.println(Config.GOODBYE);
 		        LogGenerator.generateLog("Progam finalized", "status: successful");
