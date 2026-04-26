@@ -7,6 +7,7 @@ import classes.DataUpdater;
 import classes.Input;
 import classes.LogGenerator;
 import classes.Maze;
+import classes.ReportGenerator;
 import classes.Session;
 
 public class Main {
@@ -65,16 +66,20 @@ public class Main {
 			case "1": 
 				if (maze.findFirstPath()) {
 					maze.showMaze();
-					System.out.println();
+					Input.toContinue();
 					maze.showPath();
+					if (Input.getString("\nEnter 'y' to generate a report: ").equalsIgnoreCase("y")) ReportGenerator.writePdf(session, maze);
+					maze.getPath().clear();
 				}
 				break;
 					
 			case "2": 
 				if (maze.findShortestPath()) {
 					maze.showMaze();
-					System.out.println();
+					Input.toContinue();
 					maze.showPath();
+					if (Input.getString("\nEnter 'y' to generate a report: ").equalsIgnoreCase("y")) ReportGenerator.writePdf(session, maze);
+					maze.getPath().clear();
 				}
 				break;
 					

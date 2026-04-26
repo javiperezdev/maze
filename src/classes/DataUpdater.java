@@ -2,7 +2,6 @@ package classes;
 
 public class DataUpdater {
 	private User user;
-	private StringBuilder sb = new StringBuilder();
 	private DAO dao = new DAO();
 	private Session session;
 	
@@ -12,6 +11,7 @@ public class DataUpdater {
 	
 	private String getMenu() {
 		System.out.println(user);
+		StringBuilder sb = new StringBuilder();
 		sb.append("\n1 - ").append("Update name")
 		.append("\n2 - ").append("Update nif")
 		.append("\n3 - ").append("Update email")
@@ -77,8 +77,8 @@ public class DataUpdater {
 			String newPassword = Input.getString("Enter your new password: ");
 			dao.update("password", newPassword, user.getId());
 			System.out.println("Password updated succesfully!");
-			LogGenerator.generateLog("Password updated succesfully to " + newPassword, "user: " + user.getUsername());
-			user.setBirthdate(newPassword);
+			LogGenerator.generateLog("Password updated succesfully", "user: " + user.getUsername());
+			user.setPassword(newPassword);
 			break;
 		case 7:
 			if(dao.login(user.getUsername(), Input.getString("Enter your password to delete your account: ")) != null) {

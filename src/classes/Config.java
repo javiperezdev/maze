@@ -1,7 +1,7 @@
 package classes;
 
 public class Config {
-	public static final String VERSION = "v1.3.0";
+	public static final String VERSION = "v1.4.0";
 	public static final String WELCOME = "+===========+\n|MAZE SOLVER|\n+===========+";
 	public static final String GOODBYE = "See you soon!";
 	public static final String MAZE_SOLVER_MENU = "\nSelect a path:\n--------------\n1 - First path found\n2 - Shortest path\n0 - Leave";

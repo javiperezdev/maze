@@ -23,6 +23,34 @@ public class Maze {
 	public boolean isLoaded() {
 		return this.loaded;
 	}
+	
+	public String getFilename() {
+		return this.filename;
+	}
+
+	public char[][] getMap() {
+		return map;
+	}
+	
+	public int getStartI() {
+		return startI;
+	}
+
+	public int getStartJ() {
+		return startJ;
+	}
+
+	public int getEndI() {
+		return endI;
+	}
+
+	public int getEndJ() {
+		return endJ;
+	}
+
+	public Stack<Coordinate> getPath() {
+		return path;
+	}
 
 	public void loadMaze() {
 		String fileToOpen = fileMenu();
@@ -296,9 +324,7 @@ public class Maze {
 		    Coordinate current = stepsArray[k];
 		    Coordinate next = stepsArray[k+1];
 		    System.out.println("(" + current.getI() + ", " + current.getJ() + ") " + next.getReadableDirection());	
-		}
-		
-		this.path.clear();
+		}	
 	}
 	
 	public boolean isValid(int i, int j, int direction) {
